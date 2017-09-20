@@ -1,0 +1,102 @@
+﻿DROP database if exists teliki;
+CREATE database teliki CHARACTER SET 'utf8';
+
+
+CREATE TABLE foitites (AM VARCHAR(6) NOT NULL, LastName VARCHAR(50), 
+	FirstName VARCHAR(50),Semester VARCHAR(2), PRIMARY KEY(AM))
+	ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci;
+	
+INSERT INTO foitites VALUES ("101033","Σπανάκης","Δημήτρης","3");
+INSERT INTO foitites VALUES ("101040","Χρήστου","Κωνσταντίνος","11");
+INSERT INTO foitites VALUES ("101044","Καζατζάκης","Γεώργιος","19");
+INSERT INTO foitites VALUES ("101045","Γερολέμου","Χρήστος","11");
+INSERT INTO foitites VALUES ("101049","Αυγουστής","Αριστείδης","11");
+
+
+
+CREATE TABLE mathimata (ID VARCHAR(5) NOT NULL, Mathima VARCHAR(30),
+	PRIMARY KEY(ID))
+	ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci;
+
+INSERT INTO mathimata VALUES ("11111","Προγραμματισμός");
+INSERT INTO mathimata VALUES ("22222","Δίκτυα");
+INSERT INTO mathimata VALUES ("33333","Λειτουργικά");
+INSERT INTO mathimata VALUES ("44444","Ασφάλεια");
+INSERT INTO mathimata VALUES ("55555","Δικτυακός");
+
+
+
+CREATE TABLE parakolouthoun (AM VARCHAR(6) NOT NULL, ID VARCHAR(5) NOT NULL,
+	PRIMARY KEY (AM,ID), FOREIGN KEY (AM) REFERENCES foitites(AM), 
+	FOREIGN KEY (ID) REFERENCES mathimata(ID))
+	ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci;
+
+INSERT INTO parakolouthoun VALUES ("101033","11111");
+INSERT INTO parakolouthoun VALUES ("101033","22222");
+INSERT INTO parakolouthoun VALUES ("101040","22222");
+INSERT INTO parakolouthoun VALUES ("101040","33333");
+INSERT INTO parakolouthoun VALUES ("101044","33333");
+INSERT INTO parakolouthoun VALUES ("101044","44444");
+INSERT INTO parakolouthoun VALUES ("101045","44444");
+INSERT INTO parakolouthoun VALUES ("101045","55555");
+INSERT INTO parakolouthoun VALUES ("101049","55555");
+INSERT INTO parakolouthoun VALUES ("101049","11111");
+
+
+
+CREATE TABLE vathmoi (ID VARCHAR(5) NOT NULL, AM VARCHAR(6) NOT NULL,
+	Vathmos VARCHAR(2), PRIMARY KEY (ID,AM,Vathmos),
+	FOREIGN KEY (ID) REFERENCES mathimata(ID),
+	FOREIGN KEY (AM) REFERENCES foitites(AM))
+	ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci;
+
+INSERT INTO vathmoi VALUES("11111","101040","7");
+INSERT INTO vathmoi VALUES("11111","101044","5");
+INSERT INTO vathmoi VALUES("11111","101045","6");
+INSERT INTO vathmoi VALUES("22222","101044","10");
+INSERT INTO vathmoi VALUES("22222","101045","5");
+INSERT INTO vathmoi VALUES("22222","101049","5");
+INSERT INTO vathmoi VALUES("33333","101033","7");
+INSERT INTO vathmoi VALUES("33333","101045","8");
+INSERT INTO vathmoi VALUES("33333","101049","5");
+INSERT INTO vathmoi VALUES("44444","101033","6");
+INSERT INTO vathmoi VALUES("44444","101040","10");
+INSERT INTO vathmoi VALUES("44444","101049","9");
+INSERT INTO vathmoi VALUES("55555","101033","7");
+INSERT INTO vathmoi VALUES("55555","101040","8");
+INSERT INTO vathmoi VALUES("55555","101044","7");
+
+
+
+CREATE TABLE Roles(Role VARCHAR(1) NOT NULL, RoleName VARCHAR(50),
+	PRIMARY KEY(Role))
+	ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci;
+
+INSERT INTO Roles VALUES("1","Administrator");
+INSERT INTO Roles VALUES("2","Γραμματεία");
+INSERT INTO Roles VALUES("3","Φοιτητής");
+
+
+
+CREATE TABLE leitourgies(Role VARCHAR(1) NOT NULL, Permissions VARCHAR(50),
+	FOREIGN KEY (Role) REFERENCES Roles(Role))
+	ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci;
+
+INSERT INTO leitourgies VALUES("1","All");
+INSERT INTO leitourgies VALUES("2","All but cannot insert student");
+INSERT INTO leitourgies VALUES("3","Read only");
+
+
+
+CREATE TABLE users(Username VARCHAR(20) NOT NULL, Password VARCHAR(20) NOT NULL, 
+	Role VARCHAR(1) NOT NULL, PRIMARY KEY(Username,Password),
+	FOREIGN KEY (Role) REFERENCES Roles(Role))	
+	ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci;
+
+INSERT INTO users VALUES("Admin","Admin","1");	
+INSERT INTO users VALUES("cs101033","33","3");
+INSERT INTO users VALUES("cs101040","40","3");
+INSERT INTO users VALUES("cs101044","44","3");
+INSERT INTO users VALUES("cs101045","45","3");
+INSERT INTO users VALUES("cs101049","49","3");
+INSERT INTO users VALUES("Grammateia","Grammateia","2");																																																																																																					
